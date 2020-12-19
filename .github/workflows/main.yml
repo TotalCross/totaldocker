@@ -74,7 +74,7 @@ jobs:
     - name: Test build TotalCross/totalcross
       run: |
         mkdir -p build
-        sudo docker run --rm -v build:/build -v ${PWD}:/sources -t totalcross/linux-amd64 bash -c "cmake /sources/TotalCrossVM -G Ninja && ninja"
+        docker run --rm -v build:/build -v ${PWD}:/sources -t totalcross/linux-amd64 bash -c "cmake /sources/TotalCrossVM -G Ninja && ninja"
     
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
