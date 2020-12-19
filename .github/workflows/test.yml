@@ -27,3 +27,6 @@ jobs:
         with:
           repository: TotalCross/totalcross
           ref: master
+
+      - name: Show files
+        run: ls
