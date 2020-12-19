@@ -1,4 +1,4 @@
-name: Build and upload Zip TotalCross
+name: Build & push TotalCross container
 
 on:
   workflow_dispatch:
@@ -8,21 +8,12 @@ on:
     branches: [ main ]
 
 jobs:
-  build_linux:
+  build:
     name: Build '${{ matrix.project }}' Docker container
     strategy:
       fail-fast: false
       matrix:
         project: [ linux-amd64, linux-arm32v7, linux-arm64 ]
-        include:
-        # includes a new variable of npm with a value of 2
-        # for the matrix leg matching the os and version
-        - project: linux-amd64
-          arch: amd64
-        - project: linux-arm32v7
-          arch: arm/7
-        - project: linux-arm64
-          arch: arm64/8
 
     runs-on: ubuntu-20.04
 
@@ -63,3 +54,32 @@ jobs:
     - name: Push to DockerHub
       if: ${{ success() }}
       run: docker push totalcross/${{ matrix.project }}:latest
+
+  test:
+    name: Build '${{ matrix.project }}' Docker container
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [ linux-amd64, linux-arm32v7, linux-arm64 ]
+
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Allow multiarch
+      run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    
+    - name: Checkout TotalCross/totalcross
+      uses: actions/checkout@v2
+      with:
+        repository: TotalCross/totalcross
+        ref: master
+
+    - name: Test build TotalCross/totalcross
+      run: |
+        mkdir -p build
+        docker run --rm \
+        -v build:/build \
+        -v TotalCrossVM:/sources \
+        -t totalcross/${{ matrix.project }} \
+        bash -c "ls /sources"
