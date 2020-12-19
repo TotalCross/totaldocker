@@ -5,9 +5,9 @@ on:
     - cron: "0 3 * * 1-5"
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build_linux:
@@ -46,10 +46,9 @@ jobs:
      
     - name: Build container
       run: |
-        docker buildx build --no-cache -f ${{ matrix.project }}/Dockerfile \
-        --output out_${{ matrix.project }} \
-        --tag totalcross/${{ matrix.project }} \
-        --platform linux/${{ matrix.arch }} TotalCrossVM/
+        ls
+        cd ${{ matrix.project }} 
+        docker build . --tag totalcross/${{ matrix.project }}
 
     - name: Build TotalCross/totalcross
       run: |
