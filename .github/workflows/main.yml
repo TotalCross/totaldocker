@@ -39,7 +39,9 @@ jobs:
       run: |
         ls TotalCrossVM
         mkdir -p build
-        docker run -v build:/build -v TotalCrossVM:/sources -t totalcross/${{ matrix.project }} bash -c "cmake /sources -G Ninja && ninja"
+        export BASEDIR=$(dirname $0)
+        export WORKDIR=$(cd $BASEDIR; pwd)
+        docker run -v ${WORKDIR}/build:/build -v ${WORKDIR}/TotalCrossVM:/sources -t totalcross/${{ matrix.project }} bash -c "cmake /sources -G Ninja && ninja"
 
     - name: Login to DockerHub
       if: ${{ success() }}
