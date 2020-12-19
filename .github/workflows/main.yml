@@ -37,12 +37,13 @@ jobs:
 
     - name: Test build TotalCross/totalcross
       run: |
+        ls TotalCrossVM
         mkdir -p build
         docker run --rm \
         -v build:/build \
         -v TotalCrossVM:/sources \
         -t totalcross/${{ matrix.project }} \
-        bash -c "ls /sources"
+        bash -c "cmake /sources -G Ninja && ninja"
 
     - name: Login to DockerHub
       if: ${{ success() }}
@@ -77,15 +78,16 @@ jobs:
 
     - name: Test build TotalCross/totalcross
       run: |
-        mkdir -p build
+        ls TotalCrossVM
+        mkdir -p linux-${{ matrix.project }}
         docker run --rm \
-        -v build:/build \
+        -v linux-${{ matrix.project }}:/build \
         -v TotalCrossVM:/sources \
         -t totalcross/${{ matrix.project }} \
-        bash -c "ls /sources"
+        bash -c "cmake /sources -G Ninja && ninja"
     
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
         name: linux-${{ matrix.project }}
-        path: build
+        path: linux-${{ matrix.project }}
