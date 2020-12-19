@@ -1,13 +1,11 @@
 FROM arm64v8/ubuntu:bionic
 
-# TotalCross
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         cmake \
         ninja-build \
         build-essential \
         libfontconfig1-dev \
-# SDL2 
         libtool \
         libasound2-dev \
         libpulse-dev \
@@ -21,8 +19,6 @@ RUN apt-get update && \
         libxxf86vm-dev \
         libxss-dev \
         libgl1-mesa-dev \
-# Lastly available on Xenial, deprecated for Bionic
-#       libesd0-dev \
         libdbus-1-dev \
         libudev-dev \
         libgles2-mesa-dev \
@@ -31,7 +27,6 @@ RUN apt-get update && \
         fcitx-libs-dev \
         libsamplerate0-dev \
         libsndio-dev \
-# Wayland
         libwayland-dev \
         libxkbcommon-dev \
         wayland-protocols \
@@ -55,7 +50,6 @@ RUN git clone https://github.com/SDL-mirror/SDL.git \
         -DWAYLAND_SHARED=ON; \
     ninja install
 
-# clean up
 RUN rm -r /SDL  
 
 ENV BUILD_FOLDER /build
