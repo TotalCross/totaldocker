@@ -1,4 +1,4 @@
-name: Build & push TotalCross container
+name: Integration
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: Build '${{ matrix.project }}' Docker container
+    name: Build '${{ matrix.project }}' container
     strategy:
       fail-fast: false
       matrix:
@@ -56,7 +56,7 @@ jobs:
       run: docker push totalcross/${{ matrix.project }}:latest
 
   test:
-    name: Build '${{ matrix.project }}' Docker container
+    name: Test '${{ matrix.project }}' container
     needs: build
     strategy:
       fail-fast: false
@@ -83,3 +83,9 @@ jobs:
         -v TotalCrossVM:/sources \
         -t totalcross/${{ matrix.project }} \
         bash -c "ls /sources"
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: linux-${{ matrix.project }}
+        path: build
