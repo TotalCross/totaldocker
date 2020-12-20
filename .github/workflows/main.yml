@@ -37,7 +37,6 @@ jobs:
 
     - name: Test build TotalCross/totalcross
       run: |
-        mkdir -p build
         sudo docker run --rm -v ${PWD}:/sources -t totalcross/linux-amd64 bash -c "cmake /sources/TotalCrossVM -G Ninja && ninja"
 
     - name: Login to DockerHub
@@ -73,11 +72,11 @@ jobs:
 
     - name: Test build TotalCross/totalcross
       run: |
-        mkdir -p build
-        docker run --rm -v ${PWD}/build:/build -v ${PWD}:/sources -t totalcross/linux-amd64 bash -c "cmake /sources/TotalCrossVM -G Ninja && ninja"
+        mkdir -p linux-${{ matrix.project }}-build
+        docker run --rm -v ${PWD}/linux-${{ matrix.project }}-build:/build -v ${PWD}:/sources -t totalcross/linux-amd64 bash -c "cmake /sources/TotalCrossVM -G Ninja && ninja"
     
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
         name: linux-${{ matrix.project }}
-        path: build
+        path: linux-${{ matrix.project }}-build
