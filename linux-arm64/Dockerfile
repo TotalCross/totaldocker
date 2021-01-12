@@ -43,6 +43,7 @@ RUN git clone https://github.com/SDL-mirror/SDL.git \
     && mkdir build; cd build \
     && CFLAGS="-O3 -fPIC" \
     cmake ../ -G Ninja \
+        -DHAVE_MMAP=0 \
         -DSDL_SHARED=0 \
         -DSDL_AUDIO=0 \
         -DVIDEO_VIVANTE=ON \
